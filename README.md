@@ -3,6 +3,7 @@
 |                    |                          |
 |--------------------|--------------------------|
 | **Course Name**    | Computer Architecture    |
+| **Course Type**    | Laboratory               |
 | **Teacher**        | D.Eng. Jerzy Sas         |
 | **Field of study** | Applied Computer Science |
 | **Semester**       | II                       |
