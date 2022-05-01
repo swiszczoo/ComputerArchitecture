@@ -4,7 +4,7 @@
 |--------------------|--------------------------|
 | **Course Name**    | Computer Architecture    |
 | **Course Type**    | Laboratory               |
-| **Teacher**        | D.Eng. Jerzy Sas         |
+| **Teacher**        | Jerzy Sas, D.Eng.        |
 | **Field of study** | Applied Computer Science |
 | **Semester**       | II                       |
 | **University**     | Wroclaw University of Science And Technology |
