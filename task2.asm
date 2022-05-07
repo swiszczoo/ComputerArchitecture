@@ -47,7 +47,7 @@ main:
 	li	$v0,	10
 	syscall
 	
-# a0 - [in] address o the first term
+# a0 - [in] address of the first term
 # a1 - [in] address of the second term
 # a2 - [out] address of addition result
 bcdAdd:
@@ -59,7 +59,7 @@ bcdAdd:
 	# t4 - length of the first term in digits
 	# t5 - length of the second term in digits
 	# t6 - calculated length of the result (+1 to store 0xf)
-	# t7 - are we R/W-ing more significant halfbyte? (bit mask, bit 2^0 - first term, bit 2^1 - second term, bit 2^2 - result)
+	# t7 - are we R/W-ing more significant half-byte? (bit mask, bit 2^0 - first term, bit 2^1 - second term, bit 2^2 - result)
 	# t8 - count of processed digits
 	# t9 - carry flag
 	# v0 - return address
@@ -69,13 +69,13 @@ bcdAdd:
 	li	$t4,	0
 	loopLength1:			# calculate length of the first term
 		lbu	$t0,	($t2)		# load next byte to $t0
-		xori	$t0,	$t0,	0xff	# flip all bytes (to make 0xF equal 0x0)
+		xori	$t0,	$t0,	0xff	# flip all bits (to make 0xF equal 0x0)
 		andi	$t1,	$t0,	0xf0
 		beqz	$t1,	endLoopLength1
-		addi	$t4,	$t4,	1	# 0xf is not there - increase $t3 by 1
+		addi	$t4,	$t4,	1	# 0xf is not there - increase $t4 by 1
 		andi	$t1,	$t0,	0x0f
 		beqz	$t1,	endLoopLength1
-		addi	$t4,	$t4,	1	# 0xf is not there - increase $t3 by 1
+		addi	$t4,	$t4,	1	# 0xf is not there - increase $t4 by 1
 		addiu	$t2,	$t2,	1	# go to next byte
 		b	loopLength1
 	endLoopLength1:
@@ -83,17 +83,17 @@ bcdAdd:
 	li	$t5,	0
 	loopLength2:			# calculate length of the second term
 		lbu	$t0,	($t3)		# load next byte to $t0
-		xori	$t0,	$t0,	0xff	# flip all bytes (to make 0xF equal 0x0)
+		xori	$t0,	$t0,	0xff	# flip all bits (to make 0xF equal 0x0)
 		andi	$t1,	$t0,	0xf0
 		beqz	$t1,	endLoopLength2
-		addi	$t5,	$t5,	1	# 0xf is not there - increase $t4 by 1
+		addi	$t5,	$t5,	1	# 0xf is not there - increase $t5 by 1
 		andi	$t1,	$t0,	0x0f
 		beqz	$t1,	endLoopLength2
-		addi	$t5,	$t5,	1	# 0xf is not there - increase $t4 by 1
+		addi	$t5,	$t5,	1	# 0xf is not there - increase $t5 by 1
 		addiu	$t3,	$t3,	1	# go to next byte
 		b	loopLength2
 	endLoopLength2:
-	# firstly perform raw addition and propagate carry flag to calculate
+	# firstly perform dry run addition and propagate carry flag to calculate the
 	# length of the result
 	andi	$t7,	$t5,	0x01 	# set first flag of $t7
 	sll	$t7,	$t7,	1
@@ -114,7 +114,7 @@ bcdAdd:
 		jal 	_bcdAddStep
 		addiu	$t8,	$t8,	1		# increase processed digits
 		beqz	$t0,	loopLength3_digitZero
-		addiu	$t6,	$t8,	1		# increase $t6 according to $t8 if the result digit is greater than 0
+		addiu	$t6,	$t8,	1		# increase $t6 according to $t8 if the resulting digit is greater than 0
 		loopLength3_digitZero:
 		andi	$t0,	$t7,	0x01
 		beqz	$t0,	loopLength3_addr1NoDec	# check if $t2 should be decreased
@@ -124,14 +124,14 @@ bcdAdd:
 		beqz	$t0,	loopLength3_addr2NoDec	# check if $t3 should be decreased
 		subiu	$t3,	$t3,	1		# decrease $t3 by one byte
 		loopLength3_addr2NoDec:
-		xori	$t7,	$t7,	0x03		# flip upper/lower halfbit flags
+		xori	$t7,	$t7,	0x03		# flip upper/lower half-byte flags
 		# loop conditions:
 		bge	$t2,	$a0,	loopLength3
 		bge	$t3,	$a1,	loopLength3
 		bnez	$t9,	loopLength3
 	# should we represent 0 as 0x0f or 0xf0 in result?
 	bgtz	$t6,	adding
-	li	$t6,	2	# comment this op to represent 0 as 0xf0
+	li	$t6,	2	# change 2 to 1 to represent 0 as 0xf0
 	# now finally add two numbers
 	# change t8 meaning - current result address
 	adding:
@@ -156,27 +156,27 @@ bcdAdd:
 	
 	andi	$t0,	$t7,	0x04
 	xori	$t7,	$t7,	0x04	# flip upper/lower flag for result
-	beqz	$t0,	terminatorToLSB	# store terminator in upper halfbyte
+	beqz	$t0,	terminatorToLSB	# store terminator in upper half-byte
 	li	$t0,	0xf0
 	sb	$t0,	($t8)
 	subiu	$t8,	$t8,	1	# decrease address in $t8
 	b loopAdd
-	terminatorToLSB:			# store terminator in lower halfbyte
+	terminatorToLSB:			# store terminator in lower half-byte
 	li	$t0,	0x0f
 	sb	$t0,	($t8)
 	
 	loopAdd:
 		jal 	_bcdAddStep
 		andi	$t1,	$t7,	0x04
-		beqz	$t1,	loopAdd_resultLSB	# saving upper halfbit of the result
+		beqz	$t1,	loopAdd_resultLSB	# saving upper half-byte of the result
 		lbu	$t1,	($t8)				# load current byte value
-		andi	$t1,	0x0f				# clear upper halfbit
+		andi	$t1,	0x0f				# clear upper half-byte
 		sll	$t0,	$t0,	4
-		or	$t1,	$t1,	$t0			# set bits of upper halfbit
+		or	$t1,	$t1,	$t0			# set bits of upper half-byte
 		sb	$t1,	($t8)				# save result byte
 		subiu	$t8,	$t8,	1			# decrease $t8 address by one byte
 		b 	loopAdd_addresses
-		loopAdd_resultLSB:			# saving lower halfbit of the result
+		loopAdd_resultLSB:			# saving lower half-byte of the result
 		sb	$t0,	($t8)
 		loopAdd_addresses:
 		andi	$t0,	$t7,	0x01
@@ -187,7 +187,7 @@ bcdAdd:
 		beqz	$t0,	loopAdd_addr2NoDec	# check if $t3 should be decreased
 		subiu	$t3,	$t3,	1			# decrease $t3 by one byte
 		loopAdd_addr2NoDec:
-		xori	$t7,	$t7,	0x07		# flip upper/lower/result halfbit flags
+		xori	$t7,	$t7,	0x07		# flip upper/lower/result half-byte flags
 		subiu	$t6,	$t6,	1
 		bgtz	$t6,	loopAdd	# there are more digits left to add
 		
@@ -232,8 +232,8 @@ bcdAdd:
 bcdPrint:
 	# Registers:
 	# t0 - temporary register
-	# t1 - upper halfbyte
-	# t2 - lower halfbyte
+	# t1 - upper half-byte
+	# t2 - lower half-byte
 	# t3 - AND mask
 	li	$v0,	11		# service 11 - print character
 	loopPrint:			# calculate length of the first term

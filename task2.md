@@ -30,10 +30,10 @@ Implement a procedure for adding non-limited numbers encoded as BCD (Binary Code
 + Every number ends with a `0xf` nibble to allow determining its length.
 + Added numbers are non-negative.
 + Added numbers can differ in length - we can't assume that they're complemented with non-significant zeros (however a number that starts with zeros can appear as a sum addend).
-+ The sum never contains any non-significant zeros.
++ The calculated sum never contains any non-significant zeros.
 + Numbers to add are placed in global data section (`.data`). The sum should also be stored there.
 + Your addition procedure receives 3 addresses:
   + Start address of the first addend - in `$a0` register
   + Start address of the second addend - in `$a1` register
   + Start address of the sum - in `$a2` register
-+ Assume that there is enough space to hold whole result (which may be longer than both of added numbers) under the sum address. Ensure to handle calling and returning from procedure correctly. Propose and implement a way to test your procedure.
++ Assume that there is enough space to hold the whole result (which may be longer than either of the two added numbers) under the sum address. Ensure to handle calling and returning from procedure correctly. Propose and implement a way to test your procedure.

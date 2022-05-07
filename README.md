@@ -17,5 +17,5 @@ All solutions are written in the MIPS32 assembly language, ready to be run in [M
 
 ## Task list
 
-[1. Conversion to IEEE-754](task1.md)
-[2. Binary Coded Decimal addition](task2.md)
+1. [Conversion to IEEE-754](task1.md)
+2. [Binary Coded Decimal addition](task2.md)
