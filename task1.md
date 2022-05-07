@@ -1,4 +1,5 @@
 # Task 1
+## Conversion to IEEE-754
 
 Zaimplementuj algorytm konwersji liczby w kodzie U2 na liczbę zmiennoprzecinkową 4-bajtową
 (`float`) w formacie IEEE 754 (opis formatu dostępny np. w). Zadbaj o prawidłową normalizację liczby `float`.
