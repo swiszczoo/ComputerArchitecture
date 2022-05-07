@@ -14,9 +14,9 @@ możesz (a nawet musisz) użyć jednego rejestru zmiennoprzecinkowego.
 
 **Which roughly translates to:**
 
-Implement an algorithm that converts a Two's complement number to a 4-byte IEEE-754 floating point (`float`) number (format description available e.g. in *[I also don't know where :P]*). Take care of proper normalization of the `float` number.
+Implement an algorithm that converts a Two's complement number to a 4-byte IEEE-754 floating point (`float`) number (format description available e.g. in *[I also don't know where :P]*). Take care for proper normalization of the `float` number.
 
-Do not use any floating point operations (use only integer and logic instructions). Also, do not use any floating point registers **(!!!)** during calculations.
+Do not use any floating point operations (use only integer and logic instructions). Also, do not use any floating point registers **(!!!)** during calculation.
 
 Assume that the number to convert (a 32-bit `int`) is located in a variable called `in_i` in the global variables section (`.data`). The result should be stored in the `out_f` variable, localized in the same section.
 
