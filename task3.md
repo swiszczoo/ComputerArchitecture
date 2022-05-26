@@ -1,9 +1,7 @@
 # Task 3
 # Calling and returning from subprograms using stack
 
-<p style="color:red;font-weight:700">
-UWAGA: Dla celów dydaktycznych należy ściśle przestrzegać konwencji opisanych w instrukcji poniżej. Dla uproszczenia, niekiedy odbiegają one od konwencji stosowanych w architekturze MIPS.
-</p>
+#### UWAGA: Dla celów dydaktycznych należy ściśle przestrzegać konwencji opisanych w instrukcji poniżej. Dla uproszczenia, niekiedy odbiegają one od konwencji stosowanych w architekturze MIPS.
 
 Celem zadania jest oprogramowanie mechanizm wywoływania i powrotu z funkcji/procedur (ogólnie zwanymi dalej podprogramami). Mechanizm powinien wykorzystywać stos zorganizowany we własnym obszarze pamięci (nie wykorzystujemy stosu systemowego). Zakładamy że adres wierzchołka stosu znajduje się w rejestrze $sp i rejestr ten nie jest w żaden inny sposób wykorzystywany niż tylko do przechowywania podczas całego działania programu aktualnego adresu wierzchołka stosu. Obszar na stos rezerwujemy w sekcji `.data`
 
@@ -58,6 +56,7 @@ lw $t1, 4($sp)
 ```
 
 **UWAGA: powyższe operacje pobierają dane z wnętrza stosu i nie są równoważne typowej operacji pop.**
+
 Wszystkie dane związane z wywołaniem podprogramu, włączając w to wszystkie jego zmienne lokalne należy umieścić w bloku pamięci na stosie. Blok ten jest zwykle nazywany ***rekordem aktywacji*** podprogramu.
 Aby zarezerwować miejsce na stosie (np. na zmienne lokalne podprogramu) wystarczy zmniejszyć adres w `$sp` o rozmiar alokowanego obszaru. Np. jeśli chcemy zarezerwować na stosie miejsce dla dwóch zmiennych lokalnych typu `int` to wystarczy wykonać operację:
 
@@ -67,7 +66,7 @@ subi $sp, $sp, 8 # 8 = 2 * sizeof( int )
 
 Wewnątrz kodu podprogramu `$sp` nie zmienia się. Można zatem odwoływać się do zmiennych lokalnych stosując adresowanie rejestrowe pośrednie z przesunięciem względem rejestru `$sp`. (w literaturze anglojęzycznej - base addressing) Rozważmy następującą funkcję:
 
-```
+```c
 int f()
 {
     int i;
@@ -136,7 +135,7 @@ Po wykonaniu tych czynności wskaźnik stosu musi mieć taką samą wartość ja
 
 Stosując podane powyżej zasady zaimplementuj kod odpowiadający następującemu programowi:
 
-```
+```c
 int global_array[10] = { 1,2,3,4,5,6,7,8,9,10 };
 int sum ( int *array, int array_size )
     // notacja int *array oznacza przekazanie do funkcji
