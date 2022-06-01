@@ -1,4 +1,4 @@
-# Computer Architecture - Task 2
+# Computer Architecture - Task 3
 # ISA: MIPS32
 
 .eqv STACK_SIZE 1024
